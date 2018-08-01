@@ -1,0 +1,11 @@
+Run the application:
+
+    $ ./gradlew run
+
+Send GET requests:
+
+    $ curl http://localhost:8080/math/doMath/4/7
+      {"x":4,"y":7,"product":28,"sum":11}
+
+    $ curl http://localhost:8080/math/doMath/7/2
+      {"x":7,"y":2,"product":14,"sum":9}
