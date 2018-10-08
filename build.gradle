@@ -1,27 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
-        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.15"
-        classpath 'com.google.cloud.tools:appengine-gradle-plugin:1.3.3'
-    }
+plugins {
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "com.github.johnrengelman.shadow" version "4.0.0"
+    id "net.ltgt.apt-eclipse" version "0.18"
+    id "net.ltgt.apt-idea" version "0.18"	
 }
 
-version "0.1"
-group "micromath"
-
-apply plugin:"io.spring.dependency-management"
-apply plugin:"com.github.johnrengelman.shadow"
 apply plugin:"application"
 apply plugin:"java"
-apply plugin:"net.ltgt.apt-eclipse"
-apply plugin:"net.ltgt.apt-idea"
-apply plugin:"groovy"
-apply plugin: 'com.google.cloud.tools.appengine'
+
+version "0.2"
+group "micromath"
 
 repositories {
     mavenLocal()
@@ -31,18 +19,23 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom 'io.micronaut:bom:1.0.0.M3'
+        mavenBom 'io.micronaut:bom:1.0.0.RC2'
     }
 }
 
 dependencies {
     annotationProcessor "io.micronaut:inject-java"
+    annotationProcessor "io.micronaut:validation"
+    compile "io.micronaut:inject"
+    compile "io.micronaut:validation"
+    compile "io.micronaut:runtime"
     compile "io.micronaut:http-client"
     compile "io.micronaut:http-server-netty"
-    compile "io.micronaut:inject"
-    compile "io.micronaut:runtime"
     compileOnly "io.micronaut:inject-java"
     runtime "ch.qos.logback:logback-classic:1.2.3"
+    testCompile "junit:junit:4.12"
+    testCompile "io.micronaut:inject-java"
+    testCompile "org.hamcrest:hamcrest-all:1.3"
 }
 
 shadowJar {
@@ -54,14 +47,3 @@ run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 mainClassName = "micromath.Application"
 compileJava.options.compilerArgs += '-parameters'
 compileTestJava.options.compilerArgs += '-parameters'
-
-appengine {
-    stage {
-        artifact = 'build/libs/micromath-0.1-all.jar'
-    }
-    deploy {
-        stopPreviousVersion = true
-        promote = true
-        project = 'oci-micronaut'
-    }
-}

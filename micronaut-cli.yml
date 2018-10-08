@@ -1,5 +1,5 @@
 profile: service
 defaultPackage: micromath
 ---
-testFramework: spock
+testFramework: junit
 sourceLanguage: java
